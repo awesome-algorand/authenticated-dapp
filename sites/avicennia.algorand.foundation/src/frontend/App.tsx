@@ -12,6 +12,10 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {ConnectModal} from "./ConnectModal";
 import {ColorModeContext} from "./ColorModeContext";
+import { WaitForRegistrationCard } from './states/WaitForRegistration';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { RegisteredCard } from './states/Registered';
 export default function App() {
     const colorMode = useContext(ColorModeContext)
     const theme = useTheme()
@@ -23,8 +27,8 @@ export default function App() {
     const [state, setState] = useState('start')
     const STATES = {
         'start': GetStartedCard,
-        'connected': GetStartedCard,
-        'registered': GetStartedCard
+        'connected': WaitForRegistrationCard,
+        'registered': RegisteredCard
     }
     const Content = STATES[state]
 
@@ -48,6 +52,12 @@ export default function App() {
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     Avicennia
                 </Typography>
+                <IconButton onClick={()=>{setState(state === 'registered' ? 'connected' : 'start')}} aria-label="delete" disabled={state === 'start'} color="inherit">
+                    <NavigateBeforeIcon />
+                </IconButton>
+                <IconButton onClick={()=>{setState(state === 'start' ? 'connected' : 'registered')}} aria-label="delete" disabled={state === 'registered'} color="inherit">
+                    <NavigateNextIcon />
+                </IconButton>
                 <ConnectModal color="inherit"/>
                 <IconButton sx={{ ml: 1 }} onClick={colorMode.toggle} color="inherit">
                     {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}

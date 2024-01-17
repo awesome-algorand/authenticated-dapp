@@ -7,7 +7,7 @@ import Card from "@mui/material/Card";
 import * as React from "react";
 import {ConnectModal} from "../ConnectModal";
 
-export function GetStartedCard(){
+export function RegisteredCard(){
     return (
         <Card >
             <CardMedia
@@ -19,20 +19,19 @@ export function GetStartedCard(){
                   xl: 600,
                 }
               }}
-                image="/hero-1.jpg                                                                                                                                                                        "
+                image="/hero-3.jpg                                                                                                                                                                        "
                 title="Step 1: Connect Wallet"
             />
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                    Get Started (1 of 3)
+                    Registered (3 of 3)
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                    Start by connecting a valid wallet, this is the first step in a three step process. The connecting
-                    wallet receives the current website URL from the QR Code and submits a verification request to the service.
+                    Mobile Device is Connected and Registered
                 </Typography>
             </CardContent>
             <CardActions>
-                <ConnectModal/>
+              <Button>Sign Out</Button>
             </CardActions>
         </Card>
     )

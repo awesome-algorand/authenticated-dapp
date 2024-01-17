@@ -6,8 +6,9 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import * as React from "react";
 import {ConnectModal} from "../ConnectModal";
+import { CircularProgress } from '@mui/material';
 
-export function GetStartedCard(){
+export function WaitForRegistrationCard(){
     return (
         <Card >
             <CardMedia
@@ -19,21 +20,17 @@ export function GetStartedCard(){
                   xl: 600,
                 }
               }}
-                image="/hero-1.jpg                                                                                                                                                                        "
+                image="/hero-2.jpg                                                                                                                                                                        "
                 title="Step 1: Connect Wallet"
             />
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
-                    Get Started (1 of 3)
+                    Connected (2 of 3)
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                    Start by connecting a valid wallet, this is the first step in a three step process. The connecting
-                    wallet receives the current website URL from the QR Code and submits a verification request to the service.
+                  <CircularProgress size={15}/> Waiting for registration of Passkey
                 </Typography>
             </CardContent>
-            <CardActions>
-                <ConnectModal/>
-            </CardActions>
         </Card>
     )
 }
