@@ -7,8 +7,33 @@ import Card from "@mui/material/Card";
 import * as React from "react";
 import {ConnectModal} from "../ConnectModal";
 import { CircularProgress } from '@mui/material';
+import { useContext, useEffect } from 'react';
+import { socket } from '../socket';
+import { StateContext } from '../Contexts';
+import { useCredentialStore } from '../store';
+import { useAddressQuery } from '../hooks/useAddress';
 
 export function WaitForRegistrationCard(){
+  const credentials = useCredentialStore((state)=> state.addresses);
+  const save = useCredentialStore((state)=> state.update);
+  const {state: step, setState} = useContext(StateContext)
+  const walletStr = window.localStorage.getItem('wallet');
+  const wallet = walletStr ? JSON.parse(walletStr) : null;
+
+  const address = useAddressQuery(wallet);
+
+  useEffect(() => {
+    if(step !== 'connected'){
+      return
+    }
+
+    socket.emit('wait', { wallet }, async ({data: {credId, device}}) => {
+      console.log('Registration response', credId, device);
+      save({name: wallet, credentials: [...credentials[wallet].credentials, {id: credId, device}]});
+      window.localStorage.setItem('credId', credId);
+      setState('registered')
+    });
+  }, [])
     return (
         <Card >
             <CardMedia
@@ -28,8 +53,10 @@ export function WaitForRegistrationCard(){
                     Connected (2 of 3)
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
-                  <CircularProgress size={15}/> Waiting for registration of Passkey
+                  <CircularProgress size={15}/> Waiting for Passkey registration for address:
                 </Typography>
+              {address.isLoading && <CircularProgress/>}
+              {address.isFetched && <Typography variant="body2" color="text.secondary"> {address.data}</Typography>}
             </CardContent>
         </Card>
     )

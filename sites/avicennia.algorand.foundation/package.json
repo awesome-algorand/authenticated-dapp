@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
+    "dev": "vite dev --host 0.0.0.0",
     "build": "npm run build:frontend && npm run build:backend",
     "build:backend": "nest build",
     "build:frontend": "vite build",
@@ -34,11 +34,14 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/serve-static": "^4.0.0",
+    "@tanstack/react-query": "^5.17.15",
     "qr-code-styling": "^1.6.0-rc.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "socket.io-client": "^4.7.4",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

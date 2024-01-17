@@ -2,11 +2,14 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import {Message} from '@algorandfoundation/propagule-js'
+import { Message, toBase64URL } from '@algorandfoundation/propagule-js';
 import QRCodeStyling, {Options} from "qr-code-styling";
-import {useMemo} from "react";
+import { useContext, useEffect, useMemo, useState } from 'react';
 import {Fade} from "@mui/material";
-
+import {socket} from './socket.js'
+import * as nacl from 'tweetnacl'
+import { StateContext } from './Contexts';
+import { useCredentialStore } from './store';
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -22,8 +25,14 @@ const logoStyle = {
     bgcolor: "rgb(98,195,202)",
     background: "radial-gradient(circle, rgba(184,242,246,1) 0%, rgba(75,157,171,1) 100%)"
 }
-
 export function ConnectModal({color}: {color?: string}) {
+    const credentials = useCredentialStore((state)=> state.addresses);
+    const save = useCredentialStore((state)=> state.update);
+    const {state: step, setState} = useContext(StateContext)
+    const [state] = useState({
+        requestId: Math.random(),
+        challenge: toBase64URL(nacl.randomBytes(nacl.sign.seedLength))
+    })
     const qrOpts = {
         "width": 500,
         "height": 500,
@@ -59,37 +68,42 @@ export function ConnectModal({color}: {color?: string}) {
             }
         }
     }
+    useEffect(() => {
+        if(step !== 'start'){
+            return
+        }
+        socket.emit('link', { requestId: state.requestId }, async ({data}) => {
+            console.log('On Link response');
+            const credId = window.localStorage.getItem('credId');
+            console.log(data)
+            let newCredentials = []
+            if(typeof credentials[data.wallet] !== 'undefined'){
+                newCredentials = credentials[data.wallet].credentials
+            }
+            save({name: data.wallet, credentials: [...newCredentials]})
+            window.localStorage.setItem('wallet', JSON.stringify(data.wallet));
+            if(typeof data.credId !== 'undefined'){
+                console.log(data.credId)
+                window.localStorage.setItem('credId', data.credId);
+                setState('registered')
+            } else {
+                setState('connected')
+            }
 
-    // const qrCode = new QRCodeStyling({
-    //     width: 500,
-    //     height: 500,
-    //     type: "svg",
-    //     data: "https://www.facebook.com/",
-    //     image: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
-    //     dotsOptions: {
-    //         color: "#4267b2",
-    //         type: "rounded"
-    //     },
-    //
-    //     backgroundOptions: {
-    //         color: "rgba(0,0,0,0)",
-    //     },
-    //     imageOptions: {
-    //         crossOrigin: "anonymous",
-    //         margin: 20
-    //     }
-    // });
-
+        });
+    }, [])
 
     const [open, setOpen] = React.useState(false);
     const [barcode, setBarcode] = React.useState("/qr-loading.png")
     const handleOpen = () => {
         setBarcode("/qr-loading.png")
-        let message = new Message("https://nest-fido2.onrender.com", "1234", Math.random())
+        let message = new Message(window.location.origin, state.challenge, state.requestId)
+
+        // JSON encoding
         qrOpts.data = `${message}`
+        console.log(qrOpts.data)
         const qrCode = new QRCodeStyling(qrOpts as Options)
         qrCode.getRawData("png").then((d) => {
-            console.log(d)
             setBarcode(URL.createObjectURL(d))
             setOpen(true)
         })

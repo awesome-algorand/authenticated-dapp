@@ -1,8 +1,8 @@
 /**
  * Bytes to Base64URL
- * @param {Uint8Array} bytes Bytes to convert to URL safe Base64
+ * @param {Uint8Array| ArrayBuffer} bytes Bytes to convert to URL safe Base64
  */
-export declare function toBase64URL(bytes: Uint8Array): string;
+export declare function toBase64URL(arr: Uint8Array | ArrayBuffer): string;
 /**
  * Base64URL to Bytes
  * @param {string} base64url URL safe Base64 string

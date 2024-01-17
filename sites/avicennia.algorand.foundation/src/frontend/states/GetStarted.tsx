@@ -3,10 +3,13 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
+import Card, { CardProps } from '@mui/material/Card';
 import * as React from "react";
 import {ConnectModal} from "../ConnectModal";
 
+type GetStartedCardProps = {
+    next: () => void
+} & CardProps
 export function GetStartedCard(){
     return (
         <Card >

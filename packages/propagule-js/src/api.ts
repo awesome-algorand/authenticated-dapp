@@ -7,7 +7,6 @@ const DEFAULTS = {
     },
 }
 
-
 export class HTTPClient{
     origin: URL;
     token?: string;

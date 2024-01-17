@@ -5,10 +5,20 @@ import { ThemeProvider } from '@emotion/react';
 import {createTheme, CssBaseline} from '@mui/material';
 import {DEFAULT_THEME} from './theme';
 import App from './App';
-import {ColorModeContext} from "./ColorModeContext";
+import {ColorModeContext, StateContext} from "./Contexts";
+import { GetStartedCard } from './states/GetStarted';
+import { WaitForRegistrationCard } from './states/WaitForRegistration';
+import { RegisteredCard } from './states/Registered';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-
+const queryClient = new QueryClient()
 function ProviderApp(){
+  const [state, setState] = useState('start')
+  const STATES = {
+    'start': GetStartedCard,
+    'connected': WaitForRegistrationCard,
+    'registered': RegisteredCard
+  }
     const [mode, setMode] = useState<'light' | 'dark'>(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)') ? 'dark' : 'light');
     const colorMode = useMemo(
         () => ({
@@ -31,12 +41,16 @@ function ProviderApp(){
         [mode],
     );
     return (
+      <QueryClientProvider client={queryClient}>
+      <StateContext.Provider value={{state, setState}}>
         <ColorModeContext.Provider value={colorMode}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <App/>
             </ThemeProvider>
         </ColorModeContext.Provider>
+      </StateContext.Provider>
+      </QueryClientProvider>
     )
 }
 

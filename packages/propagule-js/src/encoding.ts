@@ -3,9 +3,10 @@ const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
 
 /**
  * Bytes to Base64URL
- * @param {Uint8Array} bytes Bytes to convert to URL safe Base64
+ * @param {Uint8Array| ArrayBuffer} arr Bytes to convert to URL safe Base64
  */
-export function toBase64URL(bytes: Uint8Array): string {
+export function toBase64URL(arr: Uint8Array | ArrayBuffer): string {
+    let bytes = arr instanceof Uint8Array ? arr : new Uint8Array(arr);
     let len = bytes.length
     let base64 = "";
 
@@ -30,6 +31,9 @@ export function toBase64URL(bytes: Uint8Array): string {
  * @param {string} base64url URL safe Base64 string
  */
 export function fromBase64Url(base64url: string): Uint8Array {
+    if(typeof base64url !== 'string'){
+        throw new TypeError('Must be string!')
+    }
     return new Uint8Array(
         atob(base64url.replace(/-/g, '+').replace(/_/g, '/').replace(/\s/g, ''))
             .split('')
