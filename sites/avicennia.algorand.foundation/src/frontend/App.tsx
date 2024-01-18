@@ -17,7 +17,9 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { RegisteredCard } from './states/Registered';
 import {socket} from './socket.js'
+import { useSession } from './hooks/useSession';
 export default function App() {
+    const session = useSession();
     const {state, setState} = useContext(StateContext)
     const colorMode = useContext(ColorModeContext)
     const theme = useTheme()
