@@ -5,13 +5,12 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import * as React from "react";
-import {ConnectModal} from "../ConnectModal";
 import { CircularProgress } from '@mui/material';
 import { useContext, useEffect } from 'react';
-import { socket } from '../socket';
-import { StateContext } from '../Contexts';
-import { useCredentialStore } from '../store';
-import { useAddressQuery } from '../hooks/useAddress';
+import {useSocket} from '../../hooks/useSocket';
+import { StateContext } from '../../Contexts';
+import { useCredentialStore } from '../../store';
+import { useAddressQuery } from '../../hooks/useAddress';
 
 export function WaitForRegistrationCard(){
   const credentials = useCredentialStore((state)=> state.addresses);
@@ -19,7 +18,7 @@ export function WaitForRegistrationCard(){
   const {state: step, setState} = useContext(StateContext)
   const walletStr = window.localStorage.getItem('wallet');
   const wallet = walletStr ? JSON.parse(walletStr) : null;
-
+  const {socket} = useSocket();
   const address = useAddressQuery(wallet);
 
   useEffect(() => {

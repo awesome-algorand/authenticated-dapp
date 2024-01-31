@@ -5,7 +5,7 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import Card, { CardProps } from '@mui/material/Card';
 import * as React from "react";
-import {ConnectModal} from "../ConnectModal";
+import {ConnectModal} from "./ConnectModal";
 
 type GetStartedCardProps = {
     next: () => void

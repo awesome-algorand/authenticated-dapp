@@ -6,10 +6,10 @@ import { Message, toBase64URL } from '@algorandfoundation/propagule-js';
 import QRCodeStyling, {Options} from "qr-code-styling";
 import { useContext, useEffect, useMemo, useState } from 'react';
 import {Fade} from "@mui/material";
-import {socket} from './socket.js'
+import {useSocket} from '../../hooks/useSocket';
 import * as nacl from 'tweetnacl'
-import { StateContext } from './Contexts';
-import { useCredentialStore } from './store';
+import { StateContext } from '../../Contexts';
+import { useCredentialStore } from '../../store';
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -25,7 +25,8 @@ const logoStyle = {
     bgcolor: "rgb(98,195,202)",
     background: "radial-gradient(circle, rgba(184,242,246,1) 0%, rgba(75,157,171,1) 100%)"
 }
-export function ConnectModal({color}: {color?: string}) {
+export function ConnectModal({color}: {color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning'}) {
+    const {socket} = useSocket();
     const credentials = useCredentialStore((state)=> state.addresses);
     const save = useCredentialStore((state)=> state.update);
     const {state: step, setState} = useContext(StateContext)

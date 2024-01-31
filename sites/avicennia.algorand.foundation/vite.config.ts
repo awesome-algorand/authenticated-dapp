@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-
+import {resolve} from 'path'
 // https://vitejs.dev/config/
+
+console.log(resolve(__dirname, 'src/frontend/pages/home/index.html'))
 export default defineConfig({
     server: {
       proxy: {
@@ -17,7 +19,13 @@ export default defineConfig({
       }
     },
     build:{
-      outDir: "./dist-frontend"
+      outDir: "./dist-frontend",
+      rollupOptions: {
+        input: {
+          main: resolve(__dirname, 'index.html'),
+          dashboard: resolve(__dirname, 'dashboard/index.html'),
+        },
+      },
     },
     plugins: [react()],
 })

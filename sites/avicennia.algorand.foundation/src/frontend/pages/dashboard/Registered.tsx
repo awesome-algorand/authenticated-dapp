@@ -5,10 +5,9 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import * as React from "react";
-import {ConnectModal} from "../ConnectModal";
 import { fromBase64Url, toBase64URL } from '@algorandfoundation/propagule-js';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import { useCredentialStore } from '../store';
+import { useCredentialStore } from '../../store';
 
 const DEFAULTS = {
   method: 'POST',
